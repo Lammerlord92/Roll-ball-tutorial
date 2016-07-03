@@ -1,12 +1,21 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 	public float speed;
-	private Rigidbody rb;
+    public Text contadorObjetos;
+    public Text objetivoCompletado;
+
+    private Rigidbody rb;
+    private int contador;
+
 	void Start(){
 		rb=GetComponent<Rigidbody>();
-	}
+        contador = 0;
+        SetNumeroObjetos();
+        objetivoCompletado.text = "";
+    }
 	//físicas
 	void FixedUpdate()
 	{
@@ -18,5 +27,23 @@ public class PlayerController : MonoBehaviour {
 		
 		rb.AddForce(movement*speed);
 	}
-
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Pick Up"))
+        {
+            other.gameObject.SetActive(false);
+            contador++;
+            SetNumeroObjetos();
+        }
+    }
+    void SetNumeroObjetos()
+    {
+        contadorObjetos.text = "Recogidos: " + contador.ToString();
+        if (contador >= 12)
+        {
+            objetivoCompletado.text = "Objetivo completado";
+        }
+    }
 }
+
+//Destroy(other.gameObject);
